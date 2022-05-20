@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { Length } from 'class-validator';
 
 export class CreateUserDto {
-  @IsNotEmpty()
+  @Length(3, 10)
   @ApiProperty({
-    description: 'Nome do usuário',
+    description: 'Nome do usuário. Deve conter de 3 a 10 letras',
     example: 'Fulano',
   })
   name: string;
