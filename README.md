@@ -3,6 +3,8 @@
 
 ## 🎆 Funcinalidades
 
+Aguarde, em construção...
+
 ## ⚙ Instalação
 
 ```bash
