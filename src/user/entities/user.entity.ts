@@ -1,4 +1,8 @@
 export class User {
-  id: number;
+  id?: string;
   name: string;
+  email: string;
+  password: string;
+  cpf: number;
+  isAdmin: boolean;
 }
