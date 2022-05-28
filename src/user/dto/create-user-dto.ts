@@ -24,12 +24,11 @@ export class CreateUserDto {
   password: string;
 
   @Length(11, 11)
-  @IsNumber()
   @ApiProperty({
     description: 'CPF do usuário, somente números.',
-    example: 12345678910,
+    example: '12345678910',
   })
-  cpf: number;
+  cpf: string;
 
   @ApiProperty({
     description: 'Declaração de Adm.',

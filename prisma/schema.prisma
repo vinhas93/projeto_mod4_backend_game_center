@@ -12,7 +12,7 @@ model User {
   name     String
   email    String    @unique
   password String
-  cpf      Int       @unique
+  cpf      String    @unique
   isAdmin  Boolean   @default(false)
   profiles Profile[]
 
