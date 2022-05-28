@@ -20,9 +20,9 @@ import { UpdateUserDto } from './dto/update-uset-dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('create')
+  @Post()
   @ApiOperation({
-    summary: 'Criar novo usuário',
+    summary: 'Criar novo usuário.',
   })
   create(@Body() dto: CreateUserDto): Promise<User> {
     return this.userService.create(dto);
@@ -38,7 +38,7 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Visualizar um usuário',
+    summary: 'Visualizar um usuário pelo ID.',
   })
   findOne(@Param('id') id: string): Promise<User> {
     return this.userService.findOne(id);
@@ -54,7 +54,7 @@ export class UserController {
 
   @Delete(':id')
   @ApiOperation({
-    summary: 'Deletar Usuário.',
+    summary: 'Deletar Usuário pelo ID.',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   delete(@Param('id') id: string) {
