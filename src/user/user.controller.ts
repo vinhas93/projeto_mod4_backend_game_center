@@ -1,15 +1,34 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-uset-dto';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get('find')
+  @Post('create')
+  @ApiOperation({
+    summary: 'Criar novo usuário',
+  })
+  create(@Body() dto: CreateUserDto): Promise<User> {
+    return this.userService.create(dto);
+  }
+
+  @Get()
   @ApiOperation({
     summary: 'Listar todos os usuários.',
   })
@@ -19,17 +38,26 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Visualizar uma usuário',
+    summary: 'Visualizar um usuário',
   })
   findOne(@Param('id') id: string): Promise<User> {
     return this.userService.findOne(id);
   }
 
-  @Post('create')
+  @Patch(':id')
   @ApiOperation({
-    summary: 'Criar novo usuário',
+    summary: 'Editar dados do usuário pelo ID.',
   })
-  create(@Body() dto: CreateUserDto): Promise<User> {
-    return this.userService.create(dto);
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    return this.userService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Deletar Usuário.',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param('id') id: string) {
+    this.userService.delete(id);
   }
 }

@@ -11,7 +11,7 @@ export class CreateUserDto {
 
   @IsEmail()
   @ApiProperty({
-    description: 'Email do usuário.',
+    description: 'Email do usuário. Só é permitido um usuário por e-mail.',
     example: 'fulano@gmail.com',
   })
   email: string;
@@ -26,7 +26,7 @@ export class CreateUserDto {
   @Length(11, 11)
   @IsNumber()
   @ApiProperty({
-    description: 'CPF do usuário. Sem pontos e traços.',
+    description: 'CPF do usuário, somente números.',
     example: 12345678910,
   })
   cpf: number;
