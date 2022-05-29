@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -41,10 +42,15 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({
+  async findAll(): Promise<User[]> {
+    const list = await this.prisma.user.findMany({
       select: this.userSelect,
     });
+
+    if (list.length === 0) {
+      throw new NotFoundException('Não existem gêneros cadastrados.');
+    }
+    return list;
   }
 
   async findOne(id: string): Promise<User> {
@@ -92,16 +98,12 @@ export class UserService {
     await this.prisma.user.delete({
       where: { id },
     });
+    throw new HttpException('', 204);
   }
 
   handleError(error: Error): undefined {
     const errorLines = error.message?.split('\n');
     const lastErrorLine = errorLines[errorLines.length - 1].trim();
-
-    if (!lastErrorLine) {
-      console.log(error);
-    }
-
     throw new BadRequestException(
       lastErrorLine || 'Algum erro ocorreu ao executar a operação.',
     );

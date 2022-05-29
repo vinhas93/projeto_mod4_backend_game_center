@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   Param,
   Patch,
   Post,
@@ -48,7 +46,7 @@ export class UserController {
   @ApiOperation({
     summary: 'Editar dados do usuário pelo ID.',
   })
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
     return this.userService.update(id, dto);
   }
 
