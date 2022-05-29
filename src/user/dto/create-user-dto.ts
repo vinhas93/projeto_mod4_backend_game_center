@@ -23,7 +23,8 @@ export class CreateUserDto {
     message: 'senha muito fraca',
   })
   @ApiProperty({
-    description: 'Senha do usuário para login.',
+    description:
+      'Senha do usuário para login. Necessário letras maiúsculas e minúsculas, número e caracter especial.',
     example: 'Abcd@1234',
   })
   password: string;
