@@ -10,7 +10,8 @@ import {
 import { GenderService } from './gender.service';
 import { CreateGenderDto } from './dto/create-gender.dto';
 import { UpdateGenderDto } from './dto/update-gender.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Gender } from './entities/gender.entity';
 
 @ApiTags('gender')
 @Controller('gender')
@@ -18,27 +19,45 @@ export class GenderController {
   constructor(private readonly genderService: GenderService) {}
 
   @Post()
-  create(@Body() createGenderDto: CreateGenderDto) {
-    return this.genderService.create(createGenderDto);
+  @ApiOperation({
+    summary: 'Criar novo Gênero.',
+  })
+  create(@Body() dto: CreateGenderDto): Promise<Gender> {
+    return this.genderService.create(dto);
   }
 
   @Get()
-  findAll() {
+  @ApiOperation({
+    summary: 'Listar todos os Gêneros.',
+  })
+  findAll(): Promise<Gender[]> {
     return this.genderService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.genderService.findOne(+id);
+  @ApiOperation({
+    summary: 'Visualizar um gênero pelo ID.',
+  })
+  findOne(@Param('id') id: string): Promise<Gender> {
+    return this.genderService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGenderDto: UpdateGenderDto) {
-    return this.genderService.update(+id, updateGenderDto);
+  @ApiOperation({
+    summary: 'Editar gênero pelo ID.',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateGenderDto,
+  ): Promise<Gender> {
+    return this.genderService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.genderService.remove(+id);
+  @ApiOperation({
+    summary: 'Deletar gênero pelo ID.',
+  })
+  delete(@Param('id') id: string) {
+    return this.genderService.delete(id);
   }
 }
