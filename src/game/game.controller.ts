@@ -48,7 +48,7 @@ export class GameController {
   @ApiOperation({
     summary: 'Editar dados de um jogo pelo ID.',
   })
-  update(@Param('id') id: string, @Body() dto: UpdateGameDto) {
+  update(@Param('id') id: string, @Body() dto: UpdateGameDto): Promise<Game> {
     return this.gameService.update(id, dto);
   }
 
