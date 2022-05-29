@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { User } from './entities/user.entity';
@@ -49,7 +48,10 @@ export class UserService {
   }
 
   async findOne(id: string): Promise<User> {
-    const record = await this.prisma.user.findUnique({ where: { id } });
+    const record = await this.prisma.user.findUnique({
+      where: { id },
+      select: this.userSelect,
+    });
 
     if (!record) {
       throw new NotFoundException(`Registro com o Id '${id}' não encontrado. `);
@@ -59,7 +61,7 @@ export class UserService {
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<User> {
-    await this.findById(id);
+    await this.findOne(id);
 
     if (dto.password) {
       if (dto.password != dto.confirmPassword) {
@@ -87,35 +89,22 @@ export class UserService {
   }
 
   async delete(id: string) {
-    await this.findById(id);
+    await this.findOne(id);
 
     await this.prisma.user.delete({
       where: { id },
     });
   }
 
-  async findById(id: string): Promise<User> {
-    const record = await this.prisma.user.findUnique({
-      where: { id },
-      select: this.userSelect,
-    });
-
-    if (!record) {
-      throw new NotFoundException(`Registro com o Id '${id}' não encontrado. `);
-    }
-
-    return record;
-  }
-
   handleError(error: Error): undefined {
-    const errorLines = error.message?.split('/n');
+    const errorLines = error.message?.split('\n');
     const lastErrorLine = errorLines[errorLines.length - 1].trim();
 
     if (!lastErrorLine) {
       console.log(error);
     }
 
-    throw new UnprocessableEntityException(
+    throw new BadRequestException(
       lastErrorLine || 'Algum erro ocorreu ao executar a operação.',
     );
   }
