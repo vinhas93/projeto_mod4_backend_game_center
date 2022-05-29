@@ -10,7 +10,8 @@ import {
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Profile } from './entities/profile.entity';
 
 @ApiTags('profile')
 @Controller('profile')
@@ -18,27 +19,45 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profileService.create(createProfileDto);
+  @ApiOperation({
+    summary: 'Criar novo perfil de usuário.',
+  })
+  create(@Body() dto: CreateProfileDto): Promise<Profile> {
+    return this.profileService.create(dto);
   }
 
   @Get()
-  findAll() {
+  @ApiOperation({
+    summary: 'Listar todos os perfis.',
+  })
+  findAll(): Promise<Profile[]> {
     return this.profileService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profileService.findOne(+id);
+  @ApiOperation({
+    summary: 'Visualizar um perfil pelo ID.',
+  })
+  findOne(@Param('id') id: string): Promise<Profile> {
+    return this.profileService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    return this.profileService.update(+id, updateProfileDto);
+  @ApiOperation({
+    summary: 'Editar um perfil pelo ID.',
+  })
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateProfileDto,
+  ): Promise<Profile> {
+    return this.profileService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.profileService.remove(+id);
+  @ApiOperation({
+    summary: 'Deletar um perfil pelo ID.',
+  })
+  delete(@Param('id') id: string) {
+    return this.profileService.delete(id);
   }
 }
