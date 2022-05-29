@@ -24,7 +24,7 @@ export class CreateUserDto {
   })
   @ApiProperty({
     description:
-      'Senha do usuário para login. Necessário letras maiúsculas e minúsculas, número e caracter especial.',
+      'Senha do usuário para login. Necessário letras maiúsculas e minúsculas, número ou caracter especial.',
     example: 'Abcd@1234',
   })
   password: string;
@@ -36,6 +36,9 @@ export class CreateUserDto {
   confirmPassword: string;
 
   @Length(11, 11)
+  @Matches(/^[0-9]*$/, {
+    message: 'CPF inválido.',
+  })
   @ApiProperty({
     description: 'CPF do usuário, somente números.',
     example: '12345678910',

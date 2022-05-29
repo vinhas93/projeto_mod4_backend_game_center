@@ -25,7 +25,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    if (dto.password != dto.confirmPassword) {
+    if (dto.password !== dto.confirmPassword) {
       throw new BadRequestException('As senhas informadas não são iguais.');
     }
 
@@ -77,15 +77,13 @@ export class UserService {
       data.password = await bcrypt.hash(data.password, 10);
     }
 
-    try {
-      return this.prisma.user.update({
+    return this.prisma.user
+      .update({
         where: { id },
         data,
         select: this.userSelect,
-      });
-    } catch (error) {
-      return this.handleError(error);
-    }
+      })
+      .catch(this.handleError);
   }
 
   async delete(id: string) {
