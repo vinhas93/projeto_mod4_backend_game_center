@@ -7,7 +7,7 @@ import {
 import { CreateUserDto } from './dto/create-user-dto';
 import { User } from './entities/user.entity';
 import { PrismaService } from '../prisma/prisma.service';
-import { UpdateUserDto } from './dto/update-uset-dto';
+import { UpdateUserDto } from './dto/update-user-dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
