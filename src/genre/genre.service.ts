@@ -4,25 +4,25 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateGenderDto } from './dto/create-gender.dto';
-import { UpdateGenderDto } from './dto/update-gender.dto';
+import { CreateGenreDto } from './dto/create-genre.dto';
+import { UpdateGenreDto } from './dto/update-genre.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Gender } from './entities/gender.entity';
+import { Genre } from './entities/genre.entity';
 
 @Injectable()
-export class GenderService {
+export class GenreService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateGenderDto): Promise<Gender> {
-    const data: Gender = { ...dto };
+  async create(dto: CreateGenreDto): Promise<Genre> {
+    const data: Genre = { ...dto };
 
     data.name = await this.dataTreatment(data.name);
 
-    return this.prisma.gender.create({ data }).catch(this.handleError);
+    return this.prisma.genre.create({ data }).catch(this.handleError);
   }
 
-  async findAll(): Promise<Gender[]> {
-    const list = await this.prisma.gender.findMany();
+  async findAll(): Promise<Genre[]> {
+    const list = await this.prisma.genre.findMany();
 
     if (list.length === 0) {
       throw new NotFoundException('Não existem gêneros cadastrados.');
@@ -31,7 +31,7 @@ export class GenderService {
   }
 
   async findOne(id: string) {
-    const record = await this.prisma.gender.findUnique({ where: { id } });
+    const record = await this.prisma.genre.findUnique({ where: { id } });
 
     if (!record) {
       throw new NotFoundException(
@@ -42,14 +42,14 @@ export class GenderService {
     return record;
   }
 
-  async update(id: string, dto: UpdateGenderDto): Promise<Gender> {
+  async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
     await this.findOne(id);
 
-    const data: Partial<Gender> = { ...dto };
+    const data: Partial<Genre> = { ...dto };
 
     data.name = await this.dataTreatment(data.name);
 
-    return this.prisma.gender
+    return this.prisma.genre
       .update({
         where: { id },
         data,
@@ -60,7 +60,7 @@ export class GenderService {
   async delete(id: string) {
     await this.findOne(id);
 
-    await this.prisma.gender.delete({
+    await this.prisma.genre.delete({
       where: { id },
     });
     throw new HttpException('', 204);

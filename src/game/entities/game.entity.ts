@@ -7,6 +7,6 @@ export class Game {
   imdbScore: number;
   trailerYouTubeUrl: string;
   gameplayYouTubeUrl: string;
-  gameGenders?: string[];
+  gameGenres?: string[];
   gameProfiles?: string[];
 }

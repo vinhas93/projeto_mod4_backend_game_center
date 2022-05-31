@@ -48,7 +48,7 @@ model Game {
   imdbScore          Float         @map("imb_score")
   trailerYouTubeUrl  String        @map("trailer_youtube_url")
   gameplayYouTubeUrl String        @map("gameplay_youtube_url")
-  gameGenders        GameGender[]
+  gameGenres         GameGenre[]
   gameProfiles       GameProfile[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -57,31 +57,31 @@ model Game {
   @@map("game")
 }
 
-model Gender {
+model Genre {
   id String @id @default(uuid())
 
-  name        String       @unique
-  gameGenders GameGender[]
+  name       String      @unique
+  gameGenres GameGenre[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("gender")
+  @@map("genre")
 }
 
-model GameGender {
+model GameGenre {
   id String @id @default(uuid())
 
-  game     Game   @relation(fields: [gameId], references: [id])
-  gameId   String @map("game_id")
-  gender   Gender @relation(fields: [genderId], references: [id])
-  genderId String @map("gender_id")
+  game    Game   @relation(fields: [gameId], references: [id])
+  gameId  String @map("game_id")
+  genre   Genre  @relation(fields: [genreId], references: [id])
+  genreId String @map("genre_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([gameId, genderId])
-  @@map("game_gender")
+  @@unique([gameId, genreId])
+  @@map("game_genre")
 }
 
 model GameProfile {
