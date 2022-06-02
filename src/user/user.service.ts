@@ -4,11 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user-dto';
-import { User } from './entities/user.entity';
-import { PrismaService } from '../prisma/prisma.service';
-import { UpdateUserDto } from './dto/update-user-dto';
 import * as bcrypt from 'bcrypt';
+import { handleError } from 'src/utils/handle-error.util';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user-dto';
+import { UpdateUserDto } from './dto/update-user-dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -39,7 +40,7 @@ export class UserService {
 
     return this.prisma.user
       .create({ data, select: this.userSelect })
-      .catch(this.handleError);
+      .catch(handleError);
   }
 
   async findAll(): Promise<User[]> {
@@ -89,7 +90,7 @@ export class UserService {
         data,
         select: this.userSelect,
       })
-      .catch(this.handleError);
+      .catch(handleError);
   }
 
   async delete(id: string) {
@@ -99,13 +100,5 @@ export class UserService {
       where: { id },
     });
     throw new HttpException('', 204);
-  }
-
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-    const lastErrorLine = errorLines[errorLines.length - 1].trim();
-    throw new BadRequestException(
-      lastErrorLine || 'Algum erro ocorreu ao executar a operação.',
-    );
   }
 }

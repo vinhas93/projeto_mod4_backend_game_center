@@ -1,12 +1,8 @@
-import {
-  BadRequestException,
-  HttpException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { handleError } from 'src/utils/handle-error.util';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
-import { PrismaService } from '../prisma/prisma.service';
 import { Genre } from './entities/genre.entity';
 
 @Injectable()
@@ -18,7 +14,7 @@ export class GenreService {
 
     data.name = await this.dataTreatment(data.name);
 
-    return this.prisma.genre.create({ data }).catch(this.handleError);
+    return this.prisma.genre.create({ data }).catch(handleError);
   }
 
   async findAll(): Promise<Genre[]> {
@@ -54,7 +50,7 @@ export class GenreService {
         where: { id },
         data,
       })
-      .catch(this.handleError);
+      .catch(handleError);
   }
 
   async delete(id: string) {
@@ -64,15 +60,6 @@ export class GenreService {
       where: { id },
     });
     throw new HttpException('', 204);
-  }
-
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-    const lastErrorLine = errorLines[errorLines.length - 1].trim();
-
-    throw new BadRequestException(
-      lastErrorLine || 'Algum erro ocorreu ao executar a operação.',
-    );
   }
 
   dataTreatment(data: string) {
