@@ -26,11 +26,11 @@ model User {
 model Profile {
   id String @id @default(uuid())
 
-  title        String
-  imageUrl     String        @map("image_url")
-  user         User          @relation(fields: [userId], references: [id])
-  userId       String        @map("user_id")
-  gameProfiles GameProfile[]
+  title    String
+  imageUrl String @map("image_url")
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @map("user_id")
+  games    Game[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -41,15 +41,15 @@ model Profile {
 model Game {
   id String @id @default(uuid())
 
-  title              String        @unique
-  coverImageUrl      String        @map("cover_image")
+  title              String    @unique
+  coverImageUrl      String    @map("cover_image")
   description        String
   year               Int
-  imdbScore          Float         @map("imb_score")
-  trailerYouTubeUrl  String        @map("trailer_youtube_url")
-  gameplayYouTubeUrl String        @map("gameplay_youtube_url")
-  gameGenres         GameGenre[]
-  gameProfiles       GameProfile[]
+  imdbScore          Float     @map("imb_score")
+  trailerYouTubeUrl  String    @map("trailer_youtube_url")
+  gameplayYouTubeUrl String    @map("gameplay_youtube_url")
+  genres             Genre[]
+  profiles           Profile[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -60,40 +60,11 @@ model Game {
 model Genre {
   id String @id @default(uuid())
 
-  name       String      @unique
-  gameGenres GameGenre[]
+  name  String @unique
+  games Game[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("genre")
-}
-
-model GameGenre {
-  id String @id @default(uuid())
-
-  game    Game   @relation(fields: [gameId], references: [id])
-  gameId  String @map("game_id")
-  genre   Genre  @relation(fields: [genreId], references: [id])
-  genreId String @map("genre_id")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@unique([gameId, genreId])
-  @@map("game_genre")
-}
-
-model GameProfile {
-  id        String  @id @default(uuid())
-  game      Game    @relation(fields: [gameId], references: [id])
-  gameId    String  @map("game_id")
-  profile   Profile @relation(fields: [profileId], references: [id])
-  profileId String  @map("profile_id")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@unique([gameId, profileId])
-  @@map("game_profile")
 }
