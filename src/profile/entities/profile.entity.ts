@@ -7,5 +7,5 @@ export class Profile {
   userId: User;
   createdAt?: Date;
   updatedAt?: Date;
-  gameProfiles?: Game[];
+  games?: Game[];
 }

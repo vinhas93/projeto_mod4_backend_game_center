@@ -1,3 +1,5 @@
+import { Genre } from '../../genre/entities/genre.entity';
+import { Profile } from '../../profile/entities/profile.entity';
 export class Game {
   id?: string;
   title: string;
@@ -7,6 +9,6 @@ export class Game {
   imdbScore: number;
   trailerYouTubeUrl: string;
   gameplayYouTubeUrl: string;
-  gameGenres?: string[];
-  gameProfiles?: string[];
+  genres: Genre[];
+  profiles?: Profile[];
 }
