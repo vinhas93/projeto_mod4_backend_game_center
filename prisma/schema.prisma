@@ -27,10 +27,10 @@ model Profile {
   id String @id @default(uuid())
 
   title    String
-  imageUrl String @map("image_url")
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String @map("user_id")
-  games    Game[]
+  imageUrl String             @map("image_url")
+  user     User               @relation(fields: [userId], references: [id])
+  userId   String             @map("user_id")
+  games    GamesFromProfile[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -41,15 +41,15 @@ model Profile {
 model Game {
   id String @id @default(uuid())
 
-  title              String    @unique
-  coverImageUrl      String    @map("cover_image")
+  title              String             @unique
+  coverImageUrl      String             @map("cover_image")
   description        String
   year               Int
-  imdbScore          Float     @map("imb_score")
-  trailerYouTubeUrl  String    @map("trailer_youtube_url")
-  gameplayYouTubeUrl String    @map("gameplay_youtube_url")
+  imdbScore          Float              @map("imb_score")
+  trailerYouTubeUrl  String             @map("trailer_youtube_url")
+  gameplayYouTubeUrl String             @map("gameplay_youtube_url")
   genres             Genre[]
-  profiles           Profile[]
+  profiles           GamesFromProfile[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -67,4 +67,18 @@ model Genre {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("genre")
+}
+
+model GamesFromProfile {
+  id String @id @default(uuid())
+
+  game   Game   @relation(fields: [gameId], references: [id])
+  gameId String @map("game_id")
+
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @map("profile_id")
+
+  favorite Boolean @default(false)
+
+  @@map("games_from_profile")
 }
