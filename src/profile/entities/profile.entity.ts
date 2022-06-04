@@ -1,10 +1,9 @@
-import { User } from '../../user/entities/user.entity';
 import { Game } from '../../game/entities/game.entity';
 export class Profile {
   id?: string;
   title: string;
   imageUrl: string;
-  userId: User;
+  userId: string;
   createdAt?: Date;
   updatedAt?: Date;
   games?: Game[];

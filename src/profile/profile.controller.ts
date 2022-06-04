@@ -22,7 +22,7 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Criar novo perfil de usuário.',
   })
-  create(@Body() dto: CreateProfileDto): Promise<Profile> {
+  create(@Body() dto: CreateProfileDto) {
     return this.profileService.create(dto);
   }
 
@@ -30,7 +30,7 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Listar todos os perfis.',
   })
-  findAll(): Promise<Profile[]> {
+  findAll() {
     return this.profileService.findAll();
   }
 
@@ -38,7 +38,7 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Visualizar um perfil pelo ID.',
   })
-  findOne(@Param('id') id: string): Promise<Profile> {
+  findOne(@Param('id') id: string) {
     return this.profileService.findOne(id);
   }
 
@@ -46,10 +46,7 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Editar um perfil pelo ID.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateProfileDto,
-  ): Promise<Profile> {
+  update(@Param('id') id: string, @Body() dto: UpdateProfileDto) {
     return this.profileService.update(id, dto);
   }
 

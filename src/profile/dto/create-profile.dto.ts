@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUrl, IsUUID, Length } from 'class-validator';
+import { User } from '../../user/entities/user.entity';
 
 export class CreateProfileDto {
   @IsString()
@@ -24,12 +25,4 @@ export class CreateProfileDto {
     example: '728e20de-e51c-4a0e-9dbf-bbb1c0c6136a',
   })
   userId: string;
-
-  @IsUUID(undefined, { each: true })
-  @ApiProperty({
-    description: 'Lista com os IDs dos jogos favoritos do perfil',
-    example:
-      '["c08d2033-25f6-444d-9570-b92e0168e007", "e0673bf6-a645-418f-a91e-95a60c3bf9a9"]',
-  })
-  games: string[];
 }
