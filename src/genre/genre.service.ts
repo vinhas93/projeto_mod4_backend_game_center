@@ -4,15 +4,16 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class GenreService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateGenreDto): Promise<Genre> {
-    const data: Genre = { ...dto };
+    const data: Prisma.GenreCreateInput = { name: dto.name };
 
-    data.name = await this.dataTreatment(data.name);
+    data.name = this.dataTreatment(data.name);
 
     return this.prisma.genre.create({ data }).catch(handleError);
   }

@@ -4,15 +4,30 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class GameService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateGameDto): Promise<Game> {
-    const data: Game = { ...dto };
+  async create(dto: CreateGameDto) {
+    const data: Prisma.GameCreateInput = {
+      title: dto.title,
+      coverImageUrl: dto.coverImageUrl,
+      description: dto.description,
+      year: dto.year,
+      imdbScore: dto.imdbScore,
+      trailerYouTubeUrl: dto.trailerYouTubeUrl,
+      gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
+      genres: {
+        connectOrCreate: {
+          create: { name: dto.genres },
+          where: { name: dto.genres },
+        },
+      },
+    };
 
-    return this.prisma.game.create({ data }).catch(handleError);
+    return await this.prisma.game.create({ data }).catch(handleError);
   }
 
   async findAll(): Promise<Game[]> {
@@ -37,7 +52,7 @@ export class GameService {
   async update(id: string, dto: UpdateGameDto): Promise<Game> {
     await this.findOne(id);
 
-    const data: Partial<Game> = { ...dto };
+    const data = { ...dto };
 
     return this.prisma.game
       .update({
