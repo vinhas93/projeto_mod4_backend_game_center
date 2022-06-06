@@ -6,9 +6,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { GameModule } from './game/game.module';
 import { GenreModule } from './genre/genre.module';
 import { ProfileModule } from './profile/profile.module';
+import { GamesProfilesModule } from './games-profiles/games-profiles.module';
 
 @Module({
-  imports: [UserModule, PrismaModule, GameModule, GenreModule, ProfileModule],
+  imports: [UserModule, PrismaModule, GameModule, GenreModule, ProfileModule, GamesProfilesModule],
   controllers: [AppController],
   providers: [AppService],
 })
