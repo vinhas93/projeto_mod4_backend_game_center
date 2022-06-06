@@ -1,17 +1,16 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
-import { ProfileService } from './profile.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Profile } from './entities/profile.entity';
+import { ProfileService } from './profile.service';
 
 @ApiTags('profile')
 @Controller('profile')
@@ -26,35 +25,36 @@ export class ProfileController {
     return this.profileService.create(dto);
   }
 
-  @Get()
+  @Get('/list/:userId')
   @ApiOperation({
-    summary: 'Listar todos os perfis.',
+    summary: 'Listar todos os perfis de determinado usuário.',
   })
-  findAll() {
-    return this.profileService.findAll();
+  findAll(@Param('userId') userId: string) {
+    return this.profileService.findAll(userId);
   }
 
-  @Get(':id')
+  @Get(':profileId')
   @ApiOperation({
     summary: 'Visualizar um perfil pelo ID.',
   })
-  findOne(@Param('id') id: string) {
-    return this.profileService.findOne(id);
+  findOne(@Param('profileId') profileId: string) {
+    return this.profileService.findOne(profileId);
   }
 
-  @Patch(':id')
+  @Patch(':profileId')
   @ApiOperation({
-    summary: 'Editar um perfil pelo ID.',
+    summary:
+      'Editar um perfil pelo ID. Apenas o título e a foto do perfil são editáveis.',
   })
-  update(@Param('id') id: string, @Body() dto: UpdateProfileDto) {
-    return this.profileService.update(id, dto);
+  update(@Param('profileId') profileId: string, @Body() dto: UpdateProfileDto) {
+    return this.profileService.update(profileId, dto);
   }
 
-  @Delete(':id')
+  @Delete(':profileId')
   @ApiOperation({
     summary: 'Deletar um perfil pelo ID.',
   })
-  delete(@Param('id') id: string) {
-    return this.profileService.delete(id);
+  delete(@Param('profileId') profileId: string) {
+    return this.profileService.delete(profileId);
   }
 }

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUrl, IsUUID, Length } from 'class-validator';
-import { User } from '../../user/entities/user.entity';
 
 export class CreateProfileDto {
   @IsString()

@@ -26,6 +26,7 @@ export class ProfileService {
         data,
         select: {
           id: true,
+          title: true,
           imageUrl: true,
           user: {
             select: {
@@ -38,12 +39,12 @@ export class ProfileService {
       .catch(handleError);
   }
 
-  async findAll() {
+  async findAll(userId: string) {
     const list = await this.prisma.profile.findMany({
+      where: { userId },
       select: {
         id: true,
         title: true,
-        userId: true,
         imageUrl: true,
         _count: { select: { games: true } },
       },
@@ -55,9 +56,9 @@ export class ProfileService {
     return list;
   }
 
-  async findOne(id: string) {
+  async findOne(profileId: string) {
     const record = await this.prisma.profile.findUnique({
-      where: { id },
+      where: { id: profileId },
       select: {
         title: true,
         imageUrl: true,
@@ -65,27 +66,15 @@ export class ProfileService {
           select: {
             id: true,
             name: true,
-
-            _count: { select: { profiles: true } },
           },
         },
-        games: {
-          select: {
-            game: {
-              select: {
-                id: true,
-                title: true,
-                genres: true,
-              },
-            },
-          },
-        },
+        _count: { select: { games: true } },
       },
     });
 
     if (!record) {
       throw new NotFoundException(
-        `Registro com o Id '${id}' não encontrado ou é inválido. `,
+        `Registro com o Id '${profileId}' não encontrado ou é inválido. `,
       );
     }
 
