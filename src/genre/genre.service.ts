@@ -5,6 +5,7 @@ import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
 import { Prisma } from '@prisma/client';
+import { notFoundError } from 'src/utils/not-found.util';
 
 @Injectable()
 export class GenreService {
@@ -30,11 +31,7 @@ export class GenreService {
   async findOne(id: string) {
     const record = await this.prisma.genre.findUnique({ where: { id } });
 
-    if (!record) {
-      throw new NotFoundException(
-        `Registro com o Id '${id}' não encontrado ou é inválido. `,
-      );
-    }
+    notFoundError(record, id);
 
     return record;
   }
@@ -60,7 +57,7 @@ export class GenreService {
     await this.prisma.genre.delete({
       where: { id },
     });
-    throw new HttpException('', 204);
+    throw new HttpException('Deletado com sucesso.', 204);
   }
 
   dataTreatment(data: string) {

@@ -5,6 +5,7 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
 import { Prisma } from '@prisma/client';
+import { notFoundError } from 'src/utils/not-found.util';
 
 @Injectable()
 export class GameService {
@@ -42,9 +43,7 @@ export class GameService {
   async findOne(id: string): Promise<Game> {
     const record = await this.prisma.game.findUnique({ where: { id } });
 
-    if (!record) {
-      throw new NotFoundException(`Registro com o Id '${id}' não encontrado. `);
-    }
+    notFoundError(record, id);
 
     return record;
   }
@@ -68,6 +67,6 @@ export class GameService {
     await this.prisma.game.delete({
       where: { id },
     });
-    throw new HttpException('', 204);
+    throw new HttpException('Deletado com sucesso.', 204);
   }
 }

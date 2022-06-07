@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { handleError } from 'src/utils/handle-error.util';
+import { notFoundError } from 'src/utils/not-found.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
@@ -60,9 +61,7 @@ export class UserService {
       select: this.userSelect,
     });
 
-    if (!record) {
-      throw new NotFoundException(`Registro com o Id '${id}' não encontrado. `);
-    }
+    notFoundError(record, id);
 
     return record;
   }
@@ -99,6 +98,6 @@ export class UserService {
     await this.prisma.user.delete({
       where: { id },
     });
-    throw new HttpException('', 204);
+    throw new HttpException('Deletado com sucesso.', 204);
   }
 }

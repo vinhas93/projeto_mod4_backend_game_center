@@ -29,16 +29,16 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Listar todos os perfis de determinado usuário.',
   })
-  findAll(@Param('userId') userId: string) {
-    return this.profileService.findAll(userId);
+  findAll(@Param('userId') id: string) {
+    return this.profileService.findAll(id);
   }
 
   @Get(':profileId')
   @ApiOperation({
     summary: 'Visualizar um perfil pelo ID.',
   })
-  findOne(@Param('profileId') profileId: string) {
-    return this.profileService.findOne(profileId);
+  findOne(@Param('profileId') id: string) {
+    return this.profileService.findOne(id);
   }
 
   @Patch(':profileId')
@@ -46,15 +46,15 @@ export class ProfileController {
     summary:
       'Editar um perfil pelo ID. Apenas o título e a foto do perfil são editáveis.',
   })
-  update(@Param('profileId') profileId: string, @Body() dto: UpdateProfileDto) {
-    return this.profileService.update(profileId, dto);
+  update(@Param('profileId') id: string, @Body() dto: UpdateProfileDto) {
+    return this.profileService.update(id, dto);
   }
 
   @Delete(':profileId')
   @ApiOperation({
     summary: 'Deletar um perfil pelo ID.',
   })
-  delete(@Param('profileId') profileId: string) {
-    return this.profileService.delete(profileId);
+  delete(@Param('profileId') id: string) {
+    return this.profileService.delete(id);
   }
 }

@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
+import { notFoundError } from '../utils/not-found.util';
 
 @Injectable()
 export class ProfileService {
@@ -72,11 +73,7 @@ export class ProfileService {
       },
     });
 
-    if (!record) {
-      throw new NotFoundException(
-        `Registro com o Id '${profileId}' não encontrado ou é inválido. `,
-      );
-    }
+    notFoundError(record, profileId);
 
     return record;
   }
@@ -103,6 +100,6 @@ export class ProfileService {
     await this.prisma.profile.delete({
       where: { id },
     });
-    throw new HttpException('', 204);
+    throw new HttpException('Deletado com sucesso.', 204);
   }
 }
