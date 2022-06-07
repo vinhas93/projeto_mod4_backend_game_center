@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateGamesProfileDto } from './create-games-profile.dto';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { IsBoolean } from 'class-validator';
 
-export class UpdateGamesProfileDto extends PartialType(CreateGamesProfileDto) {}
+class FavUpdate {
+  @IsBoolean()
+  @ApiProperty({
+    description: 'Se o perfil é favorito.',
+    example: true,
+  })
+  favorite: boolean;
+}
+
+export class UpdateGamesProfileDto extends PartialType(FavUpdate) {}
