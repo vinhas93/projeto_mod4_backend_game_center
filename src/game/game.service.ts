@@ -1,17 +1,23 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { User } from 'src/user/entities/user.entity';
 import { handleError } from 'src/utils/handle-error.util';
+import { notFoundError } from 'src/utils/not-found.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Game } from './entities/game.entity';
-import { Prisma } from '@prisma/client';
-import { notFoundError } from 'src/utils/not-found.util';
 
 @Injectable()
 export class GameService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateGameDto) {
+  async create(user: User, dto: CreateGameDto) {
     const data: Prisma.GameCreateInput = {
       title: dto.title,
       coverImageUrl: dto.coverImageUrl,
@@ -27,6 +33,12 @@ export class GameService {
         },
       },
     };
+
+    if (!user.isAdmin) {
+      throw new UnauthorizedException(
+        'Você não tem permissão de admin para adicionar este jogo',
+      );
+    }
 
     return await this.prisma.game.create({ data }).catch(handleError);
   }

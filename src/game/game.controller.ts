@@ -1,19 +1,21 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
-import { GameService } from './game.service';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Game } from './entities/game.entity';
-import { AuthGuard } from '@nestjs/passport';
+import { GameService } from './game.service';
 
 @ApiTags('game')
 @Controller('game')
@@ -26,8 +28,8 @@ export class GameController {
   @ApiOperation({
     summary: 'Criar novo Jogo.',
   })
-  create(@Body() dto: CreateGameDto): Promise<Game> {
-    return this.gameService.create(dto);
+  create(@LoggedUser() user: User, @Body() dto: CreateGameDto): Promise<Game> {
+    return this.gameService.create(user, dto);
   }
 
   @Get()

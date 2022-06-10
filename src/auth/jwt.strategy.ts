@@ -14,19 +14,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: { email: string }) {
-    // const user = await this.prisma.user.findUnique({
-    //   where: { email: payload.email },
-    // });
+    const user = await this.prisma.user.findUnique({
+      where: { email: payload.email },
+    });
 
-    // if (!user) {
-    //   throw new UnauthorizedException({
-    //     message: 'Usuário não existe ou não está autenticado',
-    //   });
-    // }
+    if (!user) {
+      throw new UnauthorizedException({
+        message: 'Usuário não existe ou não está autenticado',
+      });
+    }
 
-    // delete user.password;
-    // delete user.cpf;
+    delete user.password, user.createdAt, user.updatedAt, user.cpf;
 
-    return payload;
+    return user;
   }
 }
