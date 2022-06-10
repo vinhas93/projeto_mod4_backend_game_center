@@ -14,6 +14,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { AuthGuard } from '@nestjs/passport';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -32,10 +33,10 @@ export class UserController {
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Listar todos os usuários.',
+    summary: '(Admin) Listar todos os usuários.',
   })
-  findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  findAll(@LoggedUser() user: User): Promise<User[]> {
+    return this.userService.findAll(user);
   }
 
   @Get(':id')

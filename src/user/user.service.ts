@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { handleError } from 'src/utils/handle-error.util';
+import { isAdmin } from 'src/utils/is-admin.util';
 import { notFoundError } from 'src/utils/not-found.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user-dto';
@@ -44,7 +45,9 @@ export class UserService {
       .catch(handleError);
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(user: User): Promise<User[]> {
+    isAdmin(user);
+
     const list = await this.prisma.user.findMany({
       select: this.userSelect,
     });

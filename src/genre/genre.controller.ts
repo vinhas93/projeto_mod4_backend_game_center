@@ -1,19 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
   UseGuards,
 } from '@nestjs/common';
-import { GenreService } from './genre.service';
-import { CreateGenreDto } from './dto/create-genre.dto';
-import { UpdateGenreDto } from './dto/update-genre.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Genre } from './entities/genre.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
+import { CreateGenreDto } from './dto/create-genre.dto';
+import { Genre } from './entities/genre.entity';
+import { GenreService } from './genre.service';
 
 @ApiTags('genre')
 @Controller('genre')
@@ -24,10 +24,13 @@ export class GenreController {
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Criar novo Gênero.',
+    summary: '(Admin) Criar novo Gênero.',
   })
-  create(@Body() dto: CreateGenreDto): Promise<Genre> {
-    return this.genreService.create(dto);
+  create(
+    @LoggedUser() user: User,
+    @Body() dto: CreateGenreDto,
+  ): Promise<Genre> {
+    return this.genreService.create(user, dto);
   }
 
   @Get()
@@ -46,23 +49,13 @@ export class GenreController {
     return this.genreService.findOne(id);
   }
 
-  @Patch(':id')
-  @UseGuards(AuthGuard())
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Editar gênero pelo ID.',
-  })
-  update(@Param('id') id: string, @Body() dto: UpdateGenreDto): Promise<Genre> {
-    return this.genreService.update(id, dto);
-  }
-
   @Delete(':id')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Deletar gênero pelo ID.',
+    summary: '(Admin) Deletar gênero pelo ID.',
   })
-  delete(@Param('id') id: string) {
-    return this.genreService.delete(id);
+  delete(@LoggedUser() user: User, @Param('id') id: string) {
+    return this.genreService.delete(user, id);
   }
 }

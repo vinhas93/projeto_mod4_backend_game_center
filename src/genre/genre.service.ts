@@ -1,17 +1,19 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, User } from '@prisma/client';
 import { handleError } from 'src/utils/handle-error.util';
+import { isAdmin } from 'src/utils/is-admin.util';
+import { notFoundError } from 'src/utils/not-found.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
-import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
-import { Prisma } from '@prisma/client';
-import { notFoundError } from 'src/utils/not-found.util';
 
 @Injectable()
 export class GenreService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateGenreDto): Promise<Genre> {
+  async create(user: User, dto: CreateGenreDto): Promise<Genre> {
+    isAdmin(user);
+
     const data: Prisma.GenreCreateInput = { name: dto.name };
 
     data.name = this.dataTreatment(data.name);
@@ -36,22 +38,9 @@ export class GenreService {
     return record;
   }
 
-  async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
-    await this.findOne(id);
+  async delete(user: User, id: string) {
+    isAdmin(user);
 
-    const data: Partial<Genre> = { ...dto };
-
-    data.name = await this.dataTreatment(data.name);
-
-    return this.prisma.genre
-      .update({
-        where: { id },
-        data,
-      })
-      .catch(handleError);
-  }
-
-  async delete(id: string) {
     await this.findOne(id);
 
     await this.prisma.genre.delete({

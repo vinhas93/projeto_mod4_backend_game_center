@@ -26,7 +26,7 @@ export class GameController {
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Criar novo Jogo.',
+    summary: '(Admin) Criar novo Jogo.',
   })
   create(@LoggedUser() user: User, @Body() dto: CreateGameDto): Promise<Game> {
     return this.gameService.create(user, dto);
@@ -52,19 +52,23 @@ export class GameController {
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Editar dados de um jogo pelo ID.',
+    summary: '(Admin) Editar dados de um jogo pelo ID.',
   })
-  update(@Param('id') id: string, @Body() dto: UpdateGameDto): Promise<Game> {
-    return this.gameService.update(id, dto);
+  update(
+    @LoggedUser() user: User,
+    @Param('id') id: string,
+    @Body() dto: UpdateGameDto,
+  ): Promise<Game> {
+    return this.gameService.update(user, id, dto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Deletar um jogo pelo ID.',
+    summary: '(Admin) Deletar um jogo pelo ID.',
   })
-  delete(@Param('id') id: string) {
-    return this.gameService.delete(id);
+  delete(@LoggedUser() user: User, @Param('id') id: string) {
+    return this.gameService.delete(user, id);
   }
 }

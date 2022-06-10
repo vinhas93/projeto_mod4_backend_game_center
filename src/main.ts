@@ -16,12 +16,12 @@ async function bootstrap() {
     .setVersion('1.0.0')
     .addTag('status')
     .addTag('auth')
+    .addTag('genre')
+    .addTag('game')
     .addTag('user')
     .addTag('profile')
-    .addTag('homepage')
-    .addTag('game')
-    .addTag('genre')
     .addTag('games-Profile')
+    .addTag('homepage')
     .addBearerAuth()
     .build();
 
