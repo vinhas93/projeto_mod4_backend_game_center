@@ -58,7 +58,9 @@ export class UserService {
     return list;
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(user: User, id: string): Promise<User> {
+    isAdmin(user);
+
     const record = await this.prisma.user.findUnique({
       where: { id },
       select: this.userSelect,
@@ -69,8 +71,17 @@ export class UserService {
     return record;
   }
 
-  async update(id: string, dto: UpdateUserDto): Promise<User> {
-    await this.findOne(id);
+  async myAccount(userId: string): Promise<User> {
+    const record = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: this.userSelect,
+    });
+
+    return record;
+  }
+
+  async update(userId: string, dto: UpdateUserDto): Promise<User> {
+    await this.myAccount(userId);
 
     if (dto.password) {
       if (dto.password != dto.confirmPassword) {
@@ -88,18 +99,18 @@ export class UserService {
 
     return this.prisma.user
       .update({
-        where: { id },
+        where: { id: userId },
         data,
         select: this.userSelect,
       })
       .catch(handleError);
   }
 
-  async delete(id: string) {
-    await this.findOne(id);
+  async delete(userId: string) {
+    await this.myAccount(userId);
 
     await this.prisma.user.delete({
-      where: { id },
+      where: { id: userId },
     });
     throw new HttpException('Deletado com sucesso.', 204);
   }

@@ -43,29 +43,39 @@ export class UserController {
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: 'Visualizar um usuário pelo ID.',
+    summary: '(Admin) Visualizar um usuário pelo ID.',
   })
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.userService.findOne(id);
+  findOne(@LoggedUser() user: User, @Param('id') id: string): Promise<User> {
+    return this.userService.findOne(user, id);
   }
 
-  @Patch(':id')
+  @Get()
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Visualizar informações da conta Logada.',
+  })
+  myAccount(@LoggedUser() user: User): Promise<User> {
+    return this.userService.myAccount(user.id);
+  }
+
+  @Patch()
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Editar dados do usuário pelo ID.',
   })
-  update(@Param('id') id: string, @Body() dto: UpdateUserDto): Promise<User> {
-    return this.userService.update(id, dto);
+  update(@LoggedUser() user: User, @Body() dto: UpdateUserDto): Promise<User> {
+    return this.userService.update(user.id, dto);
   }
 
-  @Delete(':id')
+  @Delete()
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Deletar Usuário pelo ID.',
   })
-  delete(@Param('id') id: string) {
-    return this.userService.delete(id);
+  delete(@LoggedUser() user: User) {
+    return this.userService.delete(user.id);
   }
 }
