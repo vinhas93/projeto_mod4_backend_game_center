@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Game } from './entities/game.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('game')
 @Controller('game')
@@ -19,6 +21,8 @@ export class GameController {
   constructor(private readonly gameService: GameService) {}
 
   @Post()
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Criar novo Jogo.',
   })
@@ -43,6 +47,8 @@ export class GameController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Editar dados de um jogo pelo ID.',
   })
@@ -51,6 +57,8 @@ export class GameController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Deletar um jogo pelo ID.',
   })

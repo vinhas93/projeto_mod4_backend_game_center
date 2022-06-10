@@ -6,13 +6,17 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { GamesProfilesService } from './games-profiles.service';
 import { CreateGamesProfileDto } from './dto/create-games-profile.dto';
 import { UpdateGamesProfileDto } from './dto/update-games-profile.dto';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('games-Profile')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller()
 export class GamesProfilesController {
   constructor(private readonly gamesProfilesService: GamesProfilesService) {}

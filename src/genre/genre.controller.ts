@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { GenreService } from './genre.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Genre } from './entities/genre.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('genre')
 @Controller('genre')
@@ -19,6 +21,8 @@ export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 
   @Post()
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Criar novo Gênero.',
   })
@@ -43,6 +47,8 @@ export class GenreController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Editar gênero pelo ID.',
   })
@@ -51,6 +57,8 @@ export class GenreController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Deletar gênero pelo ID.',
   })
