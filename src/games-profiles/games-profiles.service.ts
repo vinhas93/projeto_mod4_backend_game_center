@@ -59,8 +59,6 @@ export class GamesProfilesService {
       },
     });
 
-    console.log(record);
-
     notFoundError(record, profileId);
 
     return record;

@@ -56,7 +56,20 @@ export class GameService {
 
     await this.findOne(id);
 
-    const data = { ...dto };
+    const data = {
+      title: dto.title,
+      coverImageUrl: dto.coverImageUrl,
+      description: dto.description,
+      year: dto.year,
+      imdbScore: dto.imdbScore,
+      trailerYouTubeUrl: dto.trailerYouTubeUrl,
+      gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
+      genres: {
+        connect: {
+          name: this.dataTreatment(dto.genres),
+        },
+      },
+    };
 
     return this.prisma.game
       .update({
