@@ -17,11 +17,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { LoggedUser } from 'src/auth/logged-user.decorator';
 
 @ApiTags('user')
-@Controller('user')
+@Controller()
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post()
+  @Post('user')
   @ApiOperation({
     summary: 'Criar novo usuário.',
   })
@@ -29,7 +29,7 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @Get()
+  @Get('user')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
@@ -39,7 +39,7 @@ export class UserController {
     return this.userService.findAll(user);
   }
 
-  @Get(':id')
+  @Get('user/:id')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
@@ -49,7 +49,7 @@ export class UserController {
     return this.userService.findOne(user, id);
   }
 
-  @Get()
+  @Get('/my-account')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
@@ -59,7 +59,7 @@ export class UserController {
     return this.userService.myAccount(user.id);
   }
 
-  @Patch()
+  @Patch('user')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
@@ -69,7 +69,7 @@ export class UserController {
     return this.userService.update(user.id, dto);
   }
 
-  @Delete()
+  @Delete('user')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({

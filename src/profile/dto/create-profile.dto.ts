@@ -17,11 +17,4 @@ export class CreateProfileDto {
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcMrqyW43W_KoTq_nsfBnwuPn0FXvcTe2Kgw&usqp=CAU',
   })
   imageUrl: string;
-
-  @IsUUID()
-  @ApiProperty({
-    description: 'Id do Usuário detentor do perfil.',
-    example: '728e20de-e51c-4a0e-9dbf-bbb1c0c6136a',
-  })
-  userId: string;
 }

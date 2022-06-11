@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileService } from './profile.service';
@@ -23,42 +25,45 @@ export class ProfileController {
 
   @Post()
   @ApiOperation({
-    summary: 'Criar novo perfil de usuário.',
+    summary: 'Criar novo perfil para o usuário logado.',
   })
-  create(@Body() dto: CreateProfileDto) {
-    return this.profileService.create(dto);
+  create(@LoggedUser() user: User, @Body() dto: CreateProfileDto) {
+    return this.profileService.create(user.id, dto);
   }
 
-  @Get('/list/:userId')
+  @Get('/list')
   @ApiOperation({
-    summary: 'Listar todos os perfis de determinado usuário.',
+    summary: 'Listar todos os perfis do usuário logado.',
   })
-  findAll(@Param('userId') id: string) {
-    return this.profileService.findAll(id);
+  findAll(@LoggedUser() user: User) {
+    return this.profileService.findAll(user.id);
   }
 
   @Get(':profileId')
   @ApiOperation({
-    summary: 'Visualizar um perfil pelo ID.',
+    summary: 'Visualizar um perfil do usuário logado pelo ID.',
   })
-  findOne(@Param('profileId') id: string) {
-    return this.profileService.findOne(id);
+  findOne(@LoggedUser() user: User, @Param('profileId') id: string) {
+    return this.profileService.findOne(user.id, id);
   }
 
   @Patch(':profileId')
   @ApiOperation({
-    summary:
-      'Editar um perfil pelo ID. Apenas o título e a foto do perfil são editáveis.',
+    summary: 'Editar um perfil do usuário logado pelo ID.',
   })
-  update(@Param('profileId') id: string, @Body() dto: UpdateProfileDto) {
-    return this.profileService.update(id, dto);
+  update(
+    @LoggedUser() user: User,
+    @Param('profileId') profileId: string,
+    @Body() dto: UpdateProfileDto,
+  ) {
+    return this.profileService.update(user.id, profileId, dto);
   }
 
   @Delete(':profileId')
   @ApiOperation({
-    summary: 'Deletar um perfil pelo ID.',
+    summary: 'Deletar um perfil do usuário logado pelo ID.',
   })
-  delete(@Param('profileId') id: string) {
-    return this.profileService.delete(id);
+  delete(@LoggedUser() user: User, @Param('profileId') profileId: string) {
+    return this.profileService.delete(user.id, profileId);
   }
 }

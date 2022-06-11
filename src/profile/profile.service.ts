@@ -11,12 +11,12 @@ import { notFoundError } from '../utils/not-found.util';
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(dto: CreateProfileDto) {
+  async create(userId: string, dto: CreateProfileDto) {
     const data: Prisma.ProfileCreateInput = {
       title: dto.title,
       user: {
         connect: {
-          id: dto.userId,
+          id: userId,
         },
       },
       imageUrl: dto.imageUrl,
@@ -57,29 +57,22 @@ export class ProfileService {
     return list;
   }
 
-  async findOne(profileId: string) {
-    const record = await this.prisma.profile.findUnique({
-      where: { id: profileId },
-      select: {
-        title: true,
-        imageUrl: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        _count: { select: { games: true } },
-      },
-    });
+  async findOne(userId: string, profileId: string) {
+    const list = await this.findAll(userId);
 
-    notFoundError(record, profileId);
+    const filtro = list.filter((profile) => profile.id === profileId);
 
-    return record;
+    notFoundError(filtro, profileId);
+
+    return filtro;
   }
 
-  async update(id: string, dto: UpdateProfileDto): Promise<Profile> {
-    await this.findOne(id);
+  async update(
+    userId: string,
+    profileId: string,
+    dto: UpdateProfileDto,
+  ): Promise<Profile> {
+    await this.findOne(userId, profileId);
 
     const data: Prisma.ProfileUpdateInput = {
       title: dto.title,
@@ -88,17 +81,17 @@ export class ProfileService {
 
     return this.prisma.profile
       .update({
-        where: { id },
+        where: { id: profileId },
         data,
       })
       .catch(handleError);
   }
 
-  async delete(id: string) {
-    await this.findOne(id);
+  async delete(userId: string, profileId: string) {
+    await this.findOne(userId, profileId);
 
     await this.prisma.profile.delete({
-      where: { id },
+      where: { id: profileId },
     });
     throw new HttpException('Deletado com sucesso.', 204);
   }

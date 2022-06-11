@@ -28,14 +28,4 @@ export class AuthController {
   login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     return this.authService.login(loginDto);
   }
-
-  @Get()
-  @UseGuards(AuthGuard())
-  @ApiOperation({
-    summary: 'Retorna o usuário autenticado no momento.',
-  })
-  @ApiBearerAuth()
-  profile(@LoggedUser() user: User) {
-    return user;
-  }
 }
