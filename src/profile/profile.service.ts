@@ -85,7 +85,21 @@ export class ProfileService {
         id: true,
         title: true,
         imageUrl: true,
-        games: true,
+        games: {
+          include: {
+            game: {
+              select: {
+                id: true,
+                title: true,
+                genres: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         user: {
           select: {
             id: true,
