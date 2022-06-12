@@ -23,7 +23,7 @@ import { ProfileService } from './profile.service';
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
-  @Post()
+  @Post('create')
   @ApiOperation({
     summary: 'Criar novo perfil para o usuário logado.',
   })
