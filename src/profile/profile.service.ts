@@ -27,7 +27,9 @@ export class ProfileService {
       imageUrl: dto.imageUrl,
     };
 
-    const myProfileList = await this.findAll(userId);
+    const myProfileList = await this.prisma.profile.findMany({
+      where: { userId },
+    });
 
     const theProfile = myProfileList.filter(
       (profile) => profile.title === dto.title,
