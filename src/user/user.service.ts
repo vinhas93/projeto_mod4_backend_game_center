@@ -82,7 +82,7 @@ export class UserService {
         cpf: true,
         email: true,
         isAdmin: true,
-        profiles: true,
+        profiles: { include: { games: true } },
         createdAt: true,
         updatedAt: true,
       },

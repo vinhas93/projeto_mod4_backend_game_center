@@ -21,7 +21,7 @@ import { UpdateAdminDto } from './dto/update-admin-dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @ApiTags('userAdmin')
+  @ApiTags('create-user')
   @Post('user')
   @ApiOperation({
     summary: 'Criar novo usuário.',
@@ -31,7 +31,7 @@ export class UserController {
   }
 
   @ApiTags('userAdmin')
-  @Get('user/list')
+  @Get('user')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
