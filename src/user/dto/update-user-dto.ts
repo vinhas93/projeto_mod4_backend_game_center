@@ -1,26 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsEmail,
-  IsString,
-  Length,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { IsEmail, IsString, Length, Matches, MinLength } from 'class-validator';
 
-export class CreateUserDto {
+class update {
   @Length(3, 25)
   @IsString()
   @ApiProperty({
     description: 'Nome do usuário. Deve conter de 3 a 25 letras',
-    example: 'Admin Istrador',
+    example: 'Fulano da Silva',
   })
   name: string;
 
   @IsEmail()
   @ApiProperty({
     description: 'Email do usuário. Utilizado no login. Deve ser único.',
-    example: 'admin01@admin.com',
+    example: 'fulano@gmail.com',
   })
   email: string;
 
@@ -41,21 +34,6 @@ export class CreateUserDto {
     example: 'Abcd@1234',
   })
   confirmPassword: string;
-
-  @Length(11, 11)
-  @Matches(/^[0-9]*$/, {
-    message: 'CPF inválido.',
-  })
-  @ApiProperty({
-    description: 'CPF do usuário, somente números.',
-    example: '12345678910',
-  })
-  cpf: string;
-
-  @IsBoolean()
-  @ApiProperty({
-    description: 'Autorização de Administrador.',
-    example: true,
-  })
-  isAdmin: boolean;
 }
+
+export class UpdateUserDto extends PartialType(update) {}
