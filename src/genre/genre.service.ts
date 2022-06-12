@@ -2,7 +2,6 @@ import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { handleError } from 'src/utils/handle-error.util';
 import { isAdmin } from 'src/utils/is-admin.util';
-import { notFoundError } from 'src/utils/not-found.util';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from './entities/genre.entity';
@@ -22,7 +21,17 @@ export class GenreService {
   }
 
   async findAll(): Promise<Genre[]> {
-    const list = await this.prisma.genre.findMany();
+    const list = await this.prisma.genre.findMany({
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: {
+            games: true,
+          },
+        },
+      },
+    });
 
     if (list.length === 0) {
       throw new NotFoundException('Não existem gêneros cadastrados.');
@@ -30,21 +39,31 @@ export class GenreService {
     return list;
   }
 
-  async findOne(id: string) {
-    const record = await this.prisma.genre.findUnique({ where: { id } });
+  async findOne(name: string) {
+    name = this.dataTreatment(name);
+    const record = await this.prisma.genre.findUnique({
+      where: { name },
+      select: {
+        id: true,
+        name: true,
+        games: { include: { genres: { select: { name: true } } } },
+      },
+    });
 
-    notFoundError(record, id);
+    if (!record) {
+      throw new NotFoundException(`Gênero ${name} não encontrado.`);
+    }
 
     return record;
   }
 
-  async delete(user: User, id: string) {
+  async delete(user: User, name: string) {
     isAdmin(user);
 
-    await this.findOne(id);
+    await this.findOne(name);
 
     await this.prisma.genre.delete({
-      where: { id },
+      where: { name },
     });
     throw new HttpException('Deletado com sucesso.', 204);
   }

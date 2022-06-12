@@ -41,21 +41,21 @@ export class GenreController {
     return this.genreService.findAll();
   }
 
-  @Get(':id')
+  @Get(':name')
   @ApiOperation({
-    summary: 'Visualizar um gênero pelo ID.',
+    summary: 'Visualizar um gênero pelo nome.',
   })
-  findOne(@Param('id') id: string): Promise<Genre> {
-    return this.genreService.findOne(id);
+  findOne(@Param('name') name: string): Promise<Genre> {
+    return this.genreService.findOne(name);
   }
 
-  @Delete(':id')
+  @Delete(':name')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @ApiOperation({
-    summary: '(Admin) Deletar gênero pelo ID.',
+    summary: '(Admin) Deletar gênero pelo nome.',
   })
-  delete(@LoggedUser() user: User, @Param('id') id: string) {
-    return this.genreService.delete(user, id);
+  delete(@LoggedUser() user: User, @Param('name') name: string) {
+    return this.genreService.delete(user, name);
   }
 }
