@@ -13,6 +13,8 @@ import { CreateGamesProfileDto } from './dto/create-games-profile.dto';
 import { UpdateGamesProfileDto } from './dto/update-games-profile.dto';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from '@prisma/client';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
 
 @ApiTags('games-Profile')
 @UseGuards(AuthGuard())
@@ -34,8 +36,8 @@ export class GamesProfilesController {
   @ApiOperation({
     summary: 'Lista de Jogos de determinado perfil com genero e favoritos.',
   })
-  findOne(@Param('profileId') id: string) {
-    return this.gamesProfilesService.findOneProfile(id);
+  findOne(@LoggedUser() user: User, @Param('profileId') profileId: string) {
+    return this.gamesProfilesService.findGamesProfile(user.id, profileId);
   }
 
   @Patch('profile/games/:gamesProfileId')

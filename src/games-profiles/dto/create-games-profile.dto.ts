@@ -1,7 +1,5 @@
-import { IsUUID, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Game } from '../../game/entities/game.entity';
-import { Profile } from '../../profile/entities/profile.entity';
+import { IsBoolean, IsUUID } from 'class-validator';
 
 export class CreateGamesProfileDto {
   @IsUUID()

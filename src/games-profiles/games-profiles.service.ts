@@ -39,29 +39,33 @@ export class GamesProfilesService {
       .catch(handleError);
   }
 
-  async findOneProfile(profileId: string) {
-    const record = await this.prisma.gamesFromProfile.findMany({
-      where: { profileId },
+  async findGamesProfile(userId: string, profileId: string) {
+    const myProfileList = await this.prisma.profile.findMany({
+      where: { userId },
       select: {
         id: true,
-        game: {
+        title: true,
+        imageUrl: true,
+        games: true,
+        user: {
           select: {
-            title: true,
-            year: true,
-            genres: {
-              select: {
-                name: true,
-              },
-            },
+            id: true,
+            name: true,
+            email: true,
           },
         },
-        favorite: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 
-    notFoundError(record, profileId);
+    const theProfile = myProfileList.filter(
+      (profile) => profile.id === profileId,
+    );
 
-    return record;
+    notFoundError(theProfile, profileId);
+
+    return theProfile;
   }
 
   async updateFav(id, dto: UpdateGamesProfileDto) {
