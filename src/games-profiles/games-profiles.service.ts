@@ -47,7 +47,8 @@ export class GamesProfilesService {
         title: true,
         imageUrl: true,
         games: {
-          include: {
+          select: {
+            id: true,
             game: {
               select: {
                 id: true,
@@ -59,6 +60,7 @@ export class GamesProfilesService {
                 },
               },
             },
+            favorite: true,
           },
         },
         user: {

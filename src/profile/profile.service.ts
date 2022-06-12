@@ -86,7 +86,8 @@ export class ProfileService {
         title: true,
         imageUrl: true,
         games: {
-          include: {
+          select: {
+            id: true,
             game: {
               select: {
                 id: true,
@@ -98,6 +99,7 @@ export class ProfileService {
                 },
               },
             },
+            favorite: true,
           },
         },
         user: {
