@@ -35,16 +35,52 @@ export class GameService {
   }
 
   async findAll(): Promise<Game[]> {
-    const list = await this.prisma.game.findMany();
+    const gameList = await this.prisma.game.findMany({
+      select: {
+        id: true,
+        title: true,
+        coverImageUrl: true,
+        genres: {
+          select: {
+            name: true,
+          },
+        },
+        imdbScore: true,
+      },
+    });
 
-    if (list.length === 0) {
-      throw new NotFoundException('Não existem gêneros cadastrados.');
+    if (gameList.length === 0) {
+      throw new NotFoundException('Não existem jogos cadastrados.');
     }
-    return list;
+    return gameList;
   }
 
   async findOne(id: string): Promise<Game> {
-    const record = await this.prisma.game.findUnique({ where: { id } });
+    const record = await this.prisma.game.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        coverImageUrl: true,
+        genres: {
+          select: {
+            name: true,
+          },
+        },
+        imdbScore: true,
+        description: true,
+        year: true,
+        trailerYouTubeUrl: true,
+        gameplayYouTubeUrl: true,
+        _count: {
+          select: {
+            profiles: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
     notFoundError(record, id);
 

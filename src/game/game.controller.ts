@@ -32,22 +32,6 @@ export class GameController {
     return this.gameService.create(user, dto);
   }
 
-  @Get()
-  @ApiOperation({
-    summary: 'Listar todos os jogos.',
-  })
-  findAll(): Promise<Game[]> {
-    return this.gameService.findAll();
-  }
-
-  @Get(':id')
-  @ApiOperation({
-    summary: 'Visualizar um jogo pelo ID.',
-  })
-  findOne(@Param('id') id: string): Promise<Game> {
-    return this.gameService.findOne(id);
-  }
-
   @Patch(':id')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
@@ -70,5 +54,21 @@ export class GameController {
   })
   delete(@LoggedUser() user: User, @Param('id') id: string) {
     return this.gameService.delete(user, id);
+  }
+
+  @Get()
+  @ApiOperation({
+    summary: 'Listar todos os jogos.',
+  })
+  findAll(): Promise<Game[]> {
+    return this.gameService.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Visualizar um jogo pelo ID.',
+  })
+  findOne(@Param('id') id: string): Promise<Game> {
+    return this.gameService.findOne(id);
   }
 }
