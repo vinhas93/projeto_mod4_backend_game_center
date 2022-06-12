@@ -1,4 +1,9 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { handleError } from 'src/utils/handle-error.util';
 import { PrismaService } from '../prisma/prisma.service';
@@ -22,6 +27,18 @@ export class ProfileService {
       imageUrl: dto.imageUrl,
     };
 
+    const myProfileList = await this.findAll(userId);
+
+    const theProfile = myProfileList.filter(
+      (profile) => profile.title === dto.title,
+    );
+
+    if (theProfile.length > 0) {
+      throw new BadRequestException(
+        'Já existe um perfil com este nome nesta conta.',
+      );
+    }
+
     return await this.prisma.profile
       .create({
         data,
@@ -41,7 +58,7 @@ export class ProfileService {
   }
 
   async findAll(userId: string) {
-    const list = await this.prisma.profile.findMany({
+    const myProfileList = await this.prisma.profile.findMany({
       where: { userId },
       select: {
         id: true,
@@ -51,20 +68,41 @@ export class ProfileService {
       },
     });
 
-    if (list.length === 0) {
-      throw new NotFoundException('Não existem perfis cadastrados.');
+    if (myProfileList.length === 0) {
+      throw new NotFoundException(
+        'Não existem perfis cadastrados nesta conta.',
+      );
     }
-    return list;
+    return myProfileList;
   }
 
   async findOne(userId: string, profileId: string) {
-    const list = await this.findAll(userId);
+    const myProfileList = await this.prisma.profile.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        title: true,
+        imageUrl: true,
+        games: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
-    const filtro = list.filter((profile) => profile.id === profileId);
+    const theProfile = myProfileList.filter(
+      (profile) => profile.id === profileId,
+    );
 
-    notFoundError(filtro, profileId);
+    notFoundError(theProfile, profileId);
 
-    return filtro;
+    return theProfile;
   }
 
   async update(
@@ -79,10 +117,28 @@ export class ProfileService {
       imageUrl: dto.imageUrl,
     };
 
+    const myProfileList = await this.findAll(userId);
+
+    const theProfile = myProfileList.filter(
+      (profile) => profile.title === dto.title,
+    );
+
+    if (theProfile.length > 0) {
+      throw new BadRequestException(
+        'Já existe um perfil com este nome nesta conta.',
+      );
+    }
+
     return this.prisma.profile
       .update({
         where: { id: profileId },
         data,
+        select: {
+          id: true,
+          title: true,
+          imageUrl: true,
+          userId: true,
+        },
       })
       .catch(handleError);
   }

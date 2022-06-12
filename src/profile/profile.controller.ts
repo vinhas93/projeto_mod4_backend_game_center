@@ -31,7 +31,7 @@ export class ProfileController {
     return this.profileService.create(user.id, dto);
   }
 
-  @Get('/list')
+  @Get()
   @ApiOperation({
     summary: 'Listar todos os perfis do usuário logado.',
   })
