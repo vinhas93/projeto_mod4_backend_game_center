@@ -1,19 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, Length, Matches, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsString,
+  Length,
+  Matches,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @Length(3, 25)
   @IsString()
   @ApiProperty({
     description: 'Nome do usuário. Deve conter de 3 a 25 letras',
-    example: 'Fulano da Silva',
+    example: 'Admin Istrador',
   })
   name: string;
 
   @IsEmail()
   @ApiProperty({
     description: 'Email do usuário. Utilizado no login. Deve ser único.',
-    example: 'fulano@gmail.com',
+    example: 'admin01@admin.com',
   })
   email: string;
 
@@ -45,9 +52,10 @@ export class CreateUserDto {
   })
   cpf: string;
 
+  @IsBoolean()
   @ApiProperty({
-    description: 'Declaração de Adm.',
-    example: false,
+    description: 'Autorização de Administrador.',
+    example: true,
   })
   isAdmin: boolean;
 }
