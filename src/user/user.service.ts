@@ -31,7 +31,6 @@ export class UserService {
       cpf: dto.cpf,
       email: dto.email,
       password: await bcrypt.hash(dto.password, 10),
-      isAdmin: dto.isAdmin,
     };
 
     return this.prisma.user
