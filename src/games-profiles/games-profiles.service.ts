@@ -1,10 +1,11 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { handleError } from 'src/utils/handle-error.util';
 import { CreateGamesProfileDto } from './dto/create-games-profile.dto';
 import { UpdateGamesProfileDto } from './dto/update-games-profile.dto';
 import { notFoundError } from '../utils/not-found.util';
+import { Length } from 'class-validator';
 
 @Injectable()
 export class GamesProfilesService {
@@ -63,13 +64,6 @@ export class GamesProfilesService {
             favorite: true,
           },
         },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
         createdAt: true,
         updatedAt: true,
       },
@@ -81,7 +75,27 @@ export class GamesProfilesService {
 
     notFoundError(theProfile, profileId);
 
-    return theProfile;
+    const gamesByGenre = await this.prisma.genre.findMany({
+      select: {
+        id: true,
+        name: true,
+        games: {
+          select: {
+            id: true,
+            title: true,
+            coverImageUrl: true,
+            imdbScore: true,
+            year: true,
+          },
+        },
+      },
+    });
+
+    if (gamesByGenre.length === 0) {
+      throw new NotFoundException('Não existem gêneros cadastrados.');
+    }
+
+    return { theProfile, gamesByGenre };
   }
 
   async updateFav(id, dto: UpdateGamesProfileDto) {
