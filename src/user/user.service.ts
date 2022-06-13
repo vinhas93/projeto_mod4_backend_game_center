@@ -59,7 +59,12 @@ export class UserService {
         email: true,
         cpf: true,
         isAdmin: true,
-        _count: { select: { profiles: true } },
+        profiles: {
+          select: {
+            id: true,
+            _count: { select: { games: true } },
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },
@@ -82,7 +87,28 @@ export class UserService {
         cpf: true,
         email: true,
         isAdmin: true,
-        profiles: { include: { games: true } },
+        profiles: {
+          select: {
+            id: true,
+            title: true,
+            imageUrl: true,
+            createdAt: true,
+            updatedAt: true,
+            games: {
+              select: {
+                id: true,
+                gameId: true,
+                favorite: true,
+                game: {
+                  select: {
+                    title: true,
+                    _count: { select: { profiles: true } },
+                  },
+                },
+              },
+            },
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },
@@ -138,7 +164,16 @@ export class UserService {
         cpf: true,
         email: true,
         isAdmin: true,
-        profiles: true,
+        profiles: {
+          select: {
+            id: true,
+            title: true,
+            imageUrl: true,
+            _count: { select: { games: true } },
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },

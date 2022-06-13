@@ -30,7 +30,7 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  @ApiTags('userAdmin')
+  @ApiTags('user-admin')
   @Get('user')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
@@ -41,7 +41,7 @@ export class UserController {
     return this.userService.findAll(user);
   }
 
-  @ApiTags('userAdmin')
+  @ApiTags('user-admin')
   @Get('user/:id')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
@@ -52,7 +52,7 @@ export class UserController {
     return this.userService.findOne(user, id);
   }
 
-  @ApiTags('userAdmin')
+  @ApiTags('user-admin')
   @Delete('user/:id')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
@@ -63,7 +63,7 @@ export class UserController {
     return this.userService.remove(user, id);
   }
 
-  @ApiTags('userAdmin')
+  @ApiTags('user-admin')
   @Patch('user/:id')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
@@ -78,7 +78,7 @@ export class UserController {
     return this.userService.giveAuth(user, dto, id);
   }
 
-  @ApiTags('user')
+  @ApiTags('user-my-account')
   @Get('/my-account')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
@@ -89,7 +89,7 @@ export class UserController {
     return this.userService.myAccount(user.id);
   }
 
-  @ApiTags('user')
+  @ApiTags('user-my-account')
   @Patch('/my-account')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
@@ -100,7 +100,7 @@ export class UserController {
     return this.userService.update(user.id, dto);
   }
 
-  @ApiTags('user')
+  @ApiTags('user-my-account')
   @Delete('/my-account')
   @UseGuards(AuthGuard())
   @ApiBearerAuth()

@@ -16,14 +16,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
 import { LoggedUser } from 'src/auth/logged-user.decorator';
 
-@ApiTags('games-Profile')
 @UseGuards(AuthGuard())
 @ApiBearerAuth()
 @Controller()
 export class GamesProfilesController {
   constructor(private readonly gamesProfilesService: GamesProfilesService) {}
 
-  @Post('/profile/games')
+  @ApiTags('games-from-profile')
+  @Post('/my-account/profile/games')
   @ApiOperation({
     summary: 'Adicionar jogo a um determinado Perfil (addGame).',
   })
@@ -40,7 +40,8 @@ export class GamesProfilesController {
     return this.gamesProfilesService.findGamesProfile(user.id, profileId);
   }
 
-  @Patch('profile/games/:gamesProfileId')
+  @ApiTags('games-from-profile')
+  @Patch('/my-account/profile/games/:gamesProfileId')
   @ApiOperation({
     summary: 'Favoritar ou desfavoritar um jogo. Usar Id do addGame. ',
   })
@@ -51,7 +52,8 @@ export class GamesProfilesController {
     return this.gamesProfilesService.updateFav(id, dto);
   }
 
-  @Delete('profile/games/:gamesProfileId')
+  @ApiTags('games-from-profile')
+  @Delete('/my-account/profile/games/:gamesProfileId')
   @ApiOperation({
     summary: 'Remover jogo de um determinado Perfil. Usar Id do addGame.',
   })

@@ -15,7 +15,7 @@ import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from './entities/genre.entity';
 import { GenreService } from './genre.service';
 
-@ApiTags('genre')
+@ApiTags('game-genre')
 @Controller('genre')
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
