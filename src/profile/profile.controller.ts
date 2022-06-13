@@ -16,7 +16,7 @@ import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ProfileService } from './profile.service';
 
-@ApiTags('profile')
+@ApiTags('/my-account/profile')
 @UseGuards(AuthGuard())
 @ApiBearerAuth()
 @Controller('profile')
